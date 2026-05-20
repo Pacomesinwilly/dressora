@@ -1258,7 +1258,7 @@ export function ReservationSentScreen({ onBackDocs }: { onBackDocs: () => void }
 // ============================================================================
 // 16. PRESTIGE PROPERTY DETAIL SCREEN (IMAGE 6)
 // ============================================================================
-export function PrestigePropertyDetailScreen({ onReserve }: { onReserve: () => void }) {
+export function PrestigePropertyDetailScreen({ onReserve, onVirtualVisit }: { onReserve: () => void, onVirtualVisit?: () => void }) {
   return (
     <div className="bg-[#FAF8F5] min-h-screen text-stone-850 p-4 md:p-8 space-y-8 font-sans text-left">
       <div className="max-w-6xl mx-auto space-y-6">
@@ -1406,9 +1406,16 @@ export function PrestigePropertyDetailScreen({ onReserve }: { onReserve: () => v
                 </div>
               </div>
 
-              <button onClick={onReserve} className="w-full py-3.5 bg-[#9C4323] hover:bg-[#85351a] font-black text-center text-white rounded-xl shadow cursor-pointer text-xs">
-                Réserver le séjour
-              </button>
+              <div className="flex flex-col gap-2">
+                <button onClick={onReserve} className="w-full py-3.5 bg-stone-900 hover:bg-stone-800 font-black text-center text-white rounded-xl shadow cursor-pointer text-xs">
+                  Réserver directement
+                </button>
+                {onVirtualVisit && (
+                  <button onClick={onVirtualVisit} className="w-full py-3.5 bg-[#9C4323] hover:bg-[#85351a] font-black text-center text-white rounded-xl shadow cursor-pointer text-xs flex items-center justify-center gap-2">
+                    <Compass className="w-4 h-4" /> Visite Virtuelle (2 000 FCFA)
+                  </button>
+                )}
+              </div>
 
               <div className="space-y-2.5 pt-3 border-t border-stone-100 text-stone-500 leading-none">
                 <p className="flex justify-between"><span>850 € x 7 nuits</span> <span className="font-bold text-stone-850">5 950 €</span></p>

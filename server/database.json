@@ -1,0 +1,25 @@
+{
+  "users": [
+    {
+      "id": "leoneltogni@gmail.com",
+      "password": "1234567890",
+      "fullName": "Leo",
+      "role": "guest",
+      "createdAt": "2026-05-20T02:29:03.601Z"
+    },
+    {
+      "id": "leoneltogni@gmail.com",
+      "password": "1234567890",
+      "fullName": "kkk",
+      "role": "client",
+      "createdAt": "2026-05-20T02:32:45.522Z"
+    },
+    {
+      "id": "leoneltogni@gmail.com",
+      "password": "1234567890",
+      "fullName": "lr",
+      "role": "agent",
+      "createdAt": "2026-05-20T02:35:34.635Z"
+    }
+  ]
+}

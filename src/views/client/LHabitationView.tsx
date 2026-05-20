@@ -1018,6 +1018,38 @@ export default function LHabitationView({ onAddPropertyExternal }: LHabitationVi
               </div>
             </div>
 
+            {/* Demandes en Attente (Manifestations d'intérêt) */}
+            <div className="bg-[#FCFAF7] rounded-3xl border border-[#9C4323]/20 shadow-sm overflow-hidden p-6 space-y-4 text-xs">
+              <div className="flex items-center gap-3 border-b border-[#E8DFC2]/30 pb-3">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+                </span>
+                <h3 className="font-serif text-lg font-bold text-[#2F2B28]">Manifestations d'intérêt (Validation requise)</h3>
+              </div>
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 bg-white border border-[#E8DFC2] rounded-xl">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-orange-100 text-[#9C4323] flex items-center justify-center font-bold font-serif rounded-full shrink-0">JD</div>
+                  <div>
+                    <h4 className="font-bold text-[#2F2B28] text-sm">Jean Dupont (KYC Validé)</h4>
+                    <p className="text-[10px] text-[#8E8071] mt-0.5">Demande pour: Villa L'Horizon Saint-Tropez</p>
+                  </div>
+                </div>
+                <div className="text-right text-[#8E8071] text-[10px] font-mono">
+                  Score de solvabilité : <span className="font-bold text-emerald-600">89/100</span><br/>
+                  Visite Virtuelle effectuée
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => alert('Dossier refusé.')} className="px-4 py-2 border border-rose-200 text-rose-600 font-bold rounded-lg hover:bg-rose-50 transition-colors">
+                    Refuser
+                  </button>
+                  <button onClick={() => alert('Validation approuvée ! Le Locataire (Guest) va recevoir ses clés virtuelles et accéder à son dashboard.')} className="px-6 py-2 bg-[#9C4323] hover:bg-[#85351a] text-white font-bold rounded-lg transition-colors shadow-sm">
+                    Approuver le locataire
+                  </button>
+                </div>
+              </div>
+            </div>
+
             {/* Simulated Active List of Tenants table precisely matches Image 5 */}
             <div className="bg-white rounded-3xl border border-[#E8DFC2]/30 shadow-sm overflow-hidden p-6 space-y-6 text-xs text-stone-700 relative">
               

@@ -1,4 +1,4 @@
-export type ActiveTab = 'dashboard' | 'listings' | 'visits' | 'leads' | 'commissions' | 'guest_portal';
+export type ActiveTab = 'dashboard' | 'listings' | 'visits' | 'leads' | 'commissions' | 'guest_portal' | 'vault';
 
 export interface PropertyListing {
   id: string;

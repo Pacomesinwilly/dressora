@@ -1,4 +1,4 @@
-import { LayoutDashboard, Building2, Calendar, Users, Percent, Plus, HelpCircle, LogOut } from 'lucide-react';
+import { LayoutDashboard, Building2, Calendar, Users, Percent, Plus, HelpCircle, LogOut, Lock } from 'lucide-react';
 import { ActiveTab } from '../domain/entities/types';
 
 interface AgentSidebarProps {
@@ -21,6 +21,7 @@ export default function AgentSidebar({
     { id: 'visits' as ActiveTab, label: 'Visits', icon: Calendar },
     { id: 'leads' as ActiveTab, label: 'Leads', icon: Users },
     { id: 'commissions' as ActiveTab, label: 'Commissions', icon: Percent },
+    { id: 'vault' as ActiveTab, label: 'Documents Vault', icon: Lock },
   ];
 
   return (

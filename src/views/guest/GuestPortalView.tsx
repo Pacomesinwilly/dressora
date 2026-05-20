@@ -40,7 +40,7 @@ export default function GuestPortalView() {
   const [copiedText, setCopiedText] = useState<string | null>(null);
   
   // Custom navigation menu for all sub mockups under Guest role
-  const [guestSubTab, setGuestSubTab] = useState<'search' | 'detail' | 'checkout' | 'sent' | 'dashboard' | 'credit' | 'identity' | 'lease' | 'payments' | 'stay' | 'notifications'>('search');
+  const [guestSubTab, setGuestSubTab] = useState<'search' | 'detail' | 'checkout' | 'sent' | 'dashboard' | 'credit' | 'identity' | 'lease' | 'payments' | 'stay' | 'notifications' | 'virtual-visit' | 'waiting' | 'vault'>('identity');
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
 
   // Interactive configurations for subtabs
@@ -139,6 +139,13 @@ export default function GuestPortalView() {
           >
             Mon Séjour
           </button>
+          <button 
+            id="tab-vault"
+            onClick={() => setGuestSubTab('vault')}
+            className={`cursor-pointer font-bold flex items-center gap-1 ${guestSubTab === 'vault' ? 'text-[#9C4323] border-b-2 border-[#9C4323]' : 'text-stone-500 hover:text-stone-800'}`}
+          >
+            <Lock className="w-3.5 h-3.5" /> Coffre-fort
+          </button>
         </div>
 
         <div className="flex items-center gap-3">
@@ -186,7 +193,127 @@ export default function GuestPortalView() {
                 ← Retour au catalogue
               </button>
             </div>
-            <PrestigePropertyDetailScreen onReserve={() => setGuestSubTab('checkout')} />
+            <PrestigePropertyDetailScreen 
+              onReserve={() => setGuestSubTab('checkout')} 
+              onVirtualVisit={() => setGuestSubTab('virtual-visit')}
+            />
+          </motion.div>
+        )}
+
+        {/* ========================================== */}
+        {/* NEW TAB: VISITE VIRTUELLE (2000 FCFA)     */}
+        {/* ========================================== */}
+        {guestSubTab === 'virtual-visit' && (
+          <motion.div key="guest-virtual-visit" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} className="space-y-6">
+            <div className="mb-2">
+              <button onClick={() => setGuestSubTab('detail')} className="text-[#9C4323] font-bold text-xs flex items-center gap-1 hover:underline cursor-pointer">
+                ← Retour aux détails
+              </button>
+            </div>
+            <div className="bg-white rounded-3xl p-8 border border-[#E8DFC2]/30 shadow-xl space-y-6 max-w-4xl mx-auto">
+              <div className="text-center">
+                <span className="text-[9px] font-mono tracking-widest text-[#9C4323] font-bold uppercase block">IMMERSION 3D</span>
+                <h3 className="font-serif text-2xl font-black text-[#2F2B28] mt-1">Visite Virtuelle Premium</h3>
+                <p className="text-xs text-[#8E8071] mt-2 max-w-lg mx-auto">
+                  Accédez à la modélisation 3D intégrale du bien et naviguez dans chaque pièce comme si vous y étiez. Frais d'accès : 2 000 FCFA.
+                </p>
+              </div>
+
+              <div className="h-[400px] w-full bg-stone-900 rounded-2xl overflow-hidden relative border-4 border-stone-800 shadow-inner group">
+                <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80" alt="3D Room" className="w-full h-full object-cover opacity-60 mix-blend-luminosity group-hover:opacity-80 transition-opacity" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm group-hover:backdrop-blur-0 transition-all">
+                  <div className="bg-white/10 p-4 rounded-full border border-white/20 mb-4">
+                    <Compass className="w-10 h-10 text-white" />
+                  </div>
+                  <button onClick={() => alert("Paiement MoMo / Carte de 2000 FCFA simulé avec succès ! Vous êtes dans la visite 3D.")} className="px-6 py-3 bg-[#9C4323] hover:bg-[#85351a] text-white font-bold rounded-xl shadow-lg cursor-pointer">
+                    Payer 2 000 FCFA et Commencer la visite
+                  </button>
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-stone-100 text-center">
+                <p className="text-sm font-bold text-stone-800 mb-4">Le bien vous plaît ? Passez à l'étape suivante.</p>
+                <button 
+                  onClick={() => setGuestSubTab('waiting')}
+                  className="px-8 py-3.5 bg-stone-900 hover:bg-stone-800 text-white font-bold rounded-xl shadow-md cursor-pointer"
+                >
+                  Manifester mon intérêt (Visite Physique)
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ========================================== */}
+        {/* NEW TAB: WAITING VALIDATION               */}
+        {/* ========================================== */}
+        {guestSubTab === 'waiting' && (
+          <motion.div key="guest-waiting" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="flex justify-center items-center py-20">
+            <div className="bg-white rounded-3xl p-10 border border-[#E8DFC2]/30 shadow-xl max-w-md w-full text-center space-y-6">
+              <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto text-amber-500 relative">
+                <div className="absolute inset-0 border-4 border-amber-200 rounded-full border-t-amber-500 animate-spin" />
+                <UserCheck className="w-8 h-8" />
+              </div>
+              <div>
+                <h3 className="font-serif text-2xl font-black text-[#2F2B28]">Dossier en analyse</h3>
+                <p className="text-sm text-[#8E8071] mt-3 leading-relaxed">
+                  Votre manifestation d'intérêt a été transmise à notre agent d'élite et au propriétaire. Veuillez patienter pour leur validation formelle via l'application.
+                </p>
+              </div>
+              <div className="p-4 bg-stone-50 rounded-xl border border-stone-100 text-xs text-stone-500 font-mono">
+                Statut actuel : En attente de l'Hôte
+              </div>
+
+              <div className="pt-4 border-t border-stone-100">
+                <p className="text-[10px] text-stone-400 font-bold uppercase mb-2">Simulateur (Pour le test)</p>
+                <button 
+                  onClick={() => setGuestSubTab('dashboard')}
+                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs cursor-pointer shadow-md"
+                >
+                  [Dev] Simuler la validation (Accès Dashboard & Clés)
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ========================================== */}
+        {/* NEW TAB: COFFRE-FORT DOCUMENTS            */}
+        {/* ========================================== */}
+        {guestSubTab === 'vault' && (
+          <motion.div key="guest-vault" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }}>
+            <div className="bg-white rounded-3xl border border-[#E8DFC2]/30 shadow-sm overflow-hidden">
+              <div className="p-8 border-b border-[#E8DFC2]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-serif text-2xl font-black text-[#2F2B28]">Coffre-fort Numérique</h3>
+                  <p className="text-xs text-[#8E8071] mt-1">Vos documents personnels, baux, et reçus cryptés par Terracotta.</p>
+                </div>
+                <button className="px-5 py-2.5 bg-[#9C4323] hover:bg-[#85351a] text-white text-xs font-bold rounded-xl shadow-md flex items-center gap-2 cursor-pointer">
+                  <UploadCloud className="w-4 h-4" /> Ajouter un document
+                </button>
+              </div>
+              <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  { title: "Bail de location signé (Dressrosa)", date: "15 Mai 2026", type: "PDF", verified: true },
+                  { title: "Pièce d'identité (Passeport)", date: "10 Mai 2026", type: "JPG", verified: true },
+                  { title: "Reçu - Visite Virtuelle", date: "12 Mai 2026", type: "PDF", verified: true },
+                  { title: "Reçu - Dépôt de garantie Escrow", date: "14 Mai 2026", type: "PDF", verified: true },
+                ].map((doc, i) => (
+                  <div key={i} className="p-4 border border-stone-200 rounded-xl flex items-start gap-4 hover:border-[#9C4323]/40 transition-colors bg-stone-50/50 group cursor-pointer">
+                    <div className="w-10 h-10 rounded-lg bg-stone-200 flex items-center justify-center text-stone-500 shrink-0">
+                      <FileCheck className="w-5 h-5 text-emerald-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-sm font-bold text-stone-800">{doc.title}</h4>
+                      <p className="text-[10px] text-stone-500 font-mono mt-1">Ajouté le {doc.date} • {doc.type}</p>
+                    </div>
+                    <button className="p-2 text-stone-400 hover:text-[#9C4323] transition-colors rounded-lg hover:bg-[#F3ECE5]">
+                      <Download className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
           </motion.div>
         )}
 
@@ -510,10 +637,16 @@ export default function GuestPortalView() {
                       Votre dossier d'accès biométrique a été crypté, validé en blockchain locale, puis transmis à votre hôte d'élite.
                     </p>
                   </div>
-                  <div className="pt-2">
+                  <div className="pt-2 flex gap-3">
+                    <button
+                      onClick={() => setGuestSubTab('search')}
+                      className="px-6 py-2.5 bg-[#9C4323] hover:bg-[#85351a] text-white rounded-xl text-xs font-bold cursor-pointer shadow-md flex items-center gap-2"
+                    >
+                      Terminer et Explorer <ArrowRight className="w-4 h-4" />
+                    </button>
                     <button
                       onClick={() => setIdentityStep('document')}
-                      className="px-5 py-2 bg-stone-950 text-white rounded-lg text-xs font-bold hover:bg-stone-900 cursor-pointer"
+                      className="px-5 py-2.5 border border-stone-200 text-stone-500 rounded-xl text-xs font-bold hover:bg-stone-50 cursor-pointer"
                     >
                       Refaire l'authentification
                     </button>

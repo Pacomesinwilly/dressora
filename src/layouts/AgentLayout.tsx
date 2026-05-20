@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Building2 } from 'lucide-react';
+import { X, Building2, Lock, UploadCloud, FileCheck, Download } from 'lucide-react';
 import { ActiveTab, PropertyListing, Lead } from '../domain/entities/types';
 
 import AgentSidebar from '../components/AgentSidebar';
@@ -67,7 +67,7 @@ export default function AgentLayout({
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-[#2F2B28] flex flex-col md:flex-row overflow-x-hidden font-sans">
+    <div className="h-screen bg-[#FDFBF7] text-[#2F2B28] flex flex-col md:flex-row overflow-hidden font-sans">
       <AgentSidebar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
@@ -75,7 +75,8 @@ export default function AgentLayout({
         onLogout={onLogout}
       />
 
-      <main className="flex-1 p-6 md:p-12 max-w-7xl mx-auto space-y-8 overflow-y-auto">
+      <main className="flex-1 h-screen overflow-y-auto w-full">
+        <div className="p-6 md:p-12 max-w-7xl mx-auto space-y-8">
         <div className="flex flex-col sm:flex-row justify-between items-center bg-[#FAF5EF] border border-[#E8DFC2]/30 px-5 py-2.5 rounded-2xl text-[11px] font-sans font-medium text-[#8E8071] gap-3">
           <div className="flex items-center gap-2">
             <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse" />
@@ -112,7 +113,44 @@ export default function AgentLayout({
                 <CommissionsView portalMode="agent" />
               </motion.div>
             )}
+            {activeTab === 'vault' && (
+              <motion.div key="tab-vault" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <div className="bg-white rounded-3xl border border-[#E8DFC2]/30 shadow-sm overflow-hidden text-left">
+                  <div className="p-8 border-b border-[#E8DFC2]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <h3 className="font-serif text-2xl font-black text-[#2F2B28]">Coffre-fort Agent</h3>
+                      <p className="text-xs text-[#8E8071] mt-1">Gérez les contrats, KYC, et mandats de vos clients.</p>
+                    </div>
+                    <button className="px-5 py-2.5 bg-[#9C4323] hover:bg-[#85351a] text-white text-xs font-bold rounded-xl shadow-md flex items-center gap-2 cursor-pointer">
+                      <UploadCloud className="w-4 h-4" /> Uploader un Mandat
+                    </button>
+                  </div>
+                  <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {[
+                      { title: "Mandat de gestion (Villa Cannes)", date: "16 Mai 2026", type: "PDF", verified: true },
+                      { title: "KYC Locataire - Marie L.", date: "14 Mai 2026", type: "PDF", verified: true },
+                      { title: "Bail signé - Appartement Paris", date: "12 Mai 2026", type: "PDF", verified: true },
+                      { title: "Kbis Propriétaire", date: "10 Mai 2026", type: "JPG", verified: true },
+                    ].map((doc, i) => (
+                      <div key={i} className="p-4 border border-stone-200 rounded-xl flex items-start gap-4 hover:border-[#9C4323]/40 transition-colors bg-stone-50/50 group cursor-pointer">
+                        <div className="w-10 h-10 rounded-lg bg-stone-200 flex items-center justify-center text-stone-500 shrink-0">
+                          <FileCheck className="w-5 h-5 text-emerald-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-sm font-bold text-stone-800">{doc.title}</h4>
+                          <p className="text-[10px] text-stone-500 font-mono mt-1">Ajouté le {doc.date} • {doc.type}</p>
+                        </div>
+                        <button className="p-2 text-stone-400 hover:text-[#9C4323] transition-colors rounded-lg hover:bg-[#F3ECE5]">
+                          <Download className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
           </AnimatePresence>
+        </div>
         </div>
       </main>
 

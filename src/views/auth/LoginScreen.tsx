@@ -11,15 +11,73 @@ interface LoginScreenProps {
 export default function LoginScreen({ actor, onLogin, onBack }: LoginScreenProps) {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg('');
     setIsLoading(true);
-    setTimeout(() => {
+
+    try {
+      // Simulation d'un délai réseau pour l'UX
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      const usersKey = 'terracotta_users';
+      const users = JSON.parse(localStorage.getItem(usersKey) || '[]');
+
+      if (isRegistering) {
+        if (!identifier || !password || !fullName) {
+          setErrorMsg('Tous les champs sont requis.');
+          setIsLoading(false);
+          return;
+        }
+
+        const exists = users.find((u: any) => u.id === identifier && u.role === actor);
+        if (exists) {
+          setErrorMsg('Cet identifiant est déjà utilisé pour ce rôle.');
+          setIsLoading(false);
+          return;
+        }
+
+        const newUser = { id: identifier, password, fullName, role: actor, createdAt: new Date().toISOString() };
+        users.push(newUser);
+        localStorage.setItem(usersKey, JSON.stringify(users));
+
+        setShowSuccess(true);
+        setTimeout(() => {
+          onLogin();
+        }, 1500);
+
+      } else {
+        if (!identifier || !password) {
+          setErrorMsg('Identifiant et mot de passe requis.');
+          setIsLoading(false);
+          return;
+        }
+
+        const user = users.find((u: any) => u.id === identifier && u.password === password && u.role === actor);
+
+        if (!user) {
+          setErrorMsg('Identifiant ou mot de passe incorrect.');
+          setIsLoading(false);
+          return;
+        }
+
+        setShowSuccess(true);
+        setTimeout(() => {
+          onLogin();
+        }, 1500);
+      }
+    } catch (error) {
+      console.error("Auth Local Storage Error:", error);
+      setErrorMsg("Erreur lors de la sauvegarde sur l'appareil.");
+    } finally {
       setIsLoading(false);
-      onLogin();
-    }, 1500); // Simulate network request
+    }
   };
 
   const config = {
@@ -76,8 +134,48 @@ export default function LoginScreen({ actor, onLogin, onBack }: LoginScreenProps
           </div>
         </div>
 
-        <form onSubmit={handleLogin} className="p-8 space-y-6">
-          <div className="space-y-4">
+        {showSuccess ? (
+          <div className="p-10 flex flex-col items-center text-center space-y-4">
+            <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 mb-2">
+              <ShieldCheck className="w-8 h-8" />
+            </div>
+            <h3 className="font-serif text-2xl font-bold text-stone-800">Compte Créé</h3>
+            <p className="text-sm text-stone-500">
+              Bienvenue, {fullName}. Votre identité a été enregistrée avec succès. Redirection en cours...
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleLogin} className="p-8 space-y-6">
+            <div className="space-y-4">
+              
+              {errorMsg && (
+                <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-xs font-bold text-center">
+                  {errorMsg}
+                </div>
+              )}
+
+              <AnimatePresence>
+                {isRegistering && (
+                  <motion.div
+                    key="register-name"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <label className="text-[10px] font-mono tracking-widest text-stone-500 uppercase font-bold block mb-1">Nom complet</label>
+                    <input 
+                      type="text" 
+                      required={isRegistering}
+                      placeholder="Jean Dupont"
+                      value={fullName}
+                      onChange={e => setFullName(e.target.value)}
+                      className="w-full px-4 py-3 bg-[#FCFAF7] border border-[#E8DFC2] rounded-xl text-sm focus:outline-none focus:border-[#9C4323] transition-colors text-stone-800 mb-4"
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
             <div>
               <label className="text-[10px] font-mono tracking-widest text-stone-500 uppercase font-bold block mb-1">Identifiant</label>
               <input 
@@ -102,28 +200,49 @@ export default function LoginScreen({ actor, onLogin, onBack }: LoginScreenProps
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" className="w-4 h-4 rounded border-[#E8DFC2] text-[#9C4323] focus:ring-[#9C4323]" />
-              <span className="text-xs text-stone-600 font-medium">Se souvenir de moi</span>
-            </label>
-            <a href="#" className="text-xs text-[#9C4323] font-bold hover:underline">Oublié ?</a>
-          </div>
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" className="w-4 h-4 rounded border-[#E8DFC2] text-[#9C4323] focus:ring-[#9C4323]" />
+                <span className="text-xs text-stone-600 font-medium">Se souvenir de moi</span>
+              </label>
+              {!isRegistering && (
+                <a href="#" className="text-xs text-[#9C4323] font-bold hover:underline">Oublié ?</a>
+              )}
+            </div>
 
-          <button 
-            type="submit"
-            disabled={isLoading}
-            className={`w-full py-3.5 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer ${config.btnColor} ${isLoading ? 'opacity-70' : ''}`}
-          >
-            {isLoading ? (
-              <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              <>
-                Se connecter <ArrowRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
-        </form>
+            <button 
+              type="submit"
+              disabled={isLoading}
+              className={`w-full py-3.5 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer ${config.btnColor} ${isLoading ? 'opacity-70' : ''}`}
+            >
+              {isLoading ? (
+                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <>
+                  <span>{isRegistering ? "Créer mon compte" : "Se connecter"}</span> <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+            
+              <div className="text-center pt-2 border-t border-[#F3ECE5]">
+                <span className="text-xs text-stone-500">
+                  {isRegistering ? "Vous avez déjà un compte ?" : "Nouveau sur Terracotta ?"}
+                </span>
+                <button 
+                  type="button" 
+                  onClick={() => {
+                    setIsRegistering(!isRegistering);
+                    setErrorMsg('');
+                  }}
+                  className="ml-2 text-xs text-[#9C4323] font-bold hover:underline cursor-pointer"
+                >
+                  {isRegistering ? "Connectez-vous" : "S'inscrire"}
+                </button>
+              </div>
+            </div>
+          </form>
+        )}
 
         <div className="bg-[#FAF5EF] p-4 text-center border-t border-[#E8DFC2]/50">
           <p className="text-[10px] text-stone-500 font-mono flex items-center justify-center gap-1">

@@ -14,10 +14,11 @@ export default function ClientLayout({ onLogout, onAddPropertyExternal }: Client
   const [subMode, setSubMode] = useState<'lhabitation' | 'luxestate'>('lhabitation');
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-[#2F2B28] flex flex-col md:flex-row overflow-x-hidden font-sans">
+    <div className="h-screen bg-[#FDFBF7] text-[#2F2B28] flex flex-col md:flex-row overflow-hidden font-sans">
       <ClientSidebar onLogout={onLogout} />
       
-      <main className="flex-1 p-6 md:p-12 max-w-7xl mx-auto space-y-8 overflow-y-auto">
+      <main className="flex-1 h-screen overflow-y-auto w-full">
+        <div className="p-6 md:p-12 max-w-7xl mx-auto space-y-8">
         <div className="flex flex-col sm:flex-row justify-between items-center bg-[#FAF5EF] border border-[#E8DFC2]/30 px-5 py-2.5 rounded-2xl text-[11px] font-sans font-medium text-[#8E8071] gap-3">
           <div className="flex items-center gap-2">
             <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse" />
@@ -54,6 +55,7 @@ export default function ClientLayout({ onLogout, onAddPropertyExternal }: Client
               )}
             </motion.div>
           </AnimatePresence>
+        </div>
         </div>
       </main>
     </div>
