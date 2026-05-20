@@ -1,0 +1,8 @@
+{
+  "name": "Terracotta Reserve",
+  "description": "Portail d'élite pour agents immobiliers de luxe, incluant la gestion de pipeline de leads, la planification de visites et la création d'annonces.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
