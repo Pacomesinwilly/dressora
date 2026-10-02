@@ -80,6 +80,12 @@ export default function LoginScreen({ actor, onLogin, onBack }: LoginScreenProps
     }
   };
 
+  const demoAccountMap = {
+    agent: { id: 'agent@terracotta.fr', password: 'agent123' },
+    client: { id: 'proprio@terracotta.fr', password: 'proprio123' },
+    guest: { id: 'resident@terracotta.fr', password: 'resident123' },
+  } as const;
+
   const config = {
     agent: {
       title: 'Elite Agent Portal',
@@ -106,6 +112,13 @@ export default function LoginScreen({ actor, onLogin, onBack }: LoginScreenProps
       placeholderId: 'Numéro de Téléphone ou Email',
     }
   }[actor];
+
+  const fillDemoCredentials = () => {
+    const demo = demoAccountMap[actor];
+    setIdentifier(demo.id);
+    setPassword(demo.password);
+    setErrorMsg('');
+  };
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] flex flex-col items-center justify-center p-6 font-sans relative overflow-hidden">
@@ -147,6 +160,19 @@ export default function LoginScreen({ actor, onLogin, onBack }: LoginScreenProps
         ) : (
           <form onSubmit={handleLogin} className="p-8 space-y-6">
             <div className="space-y-4">
+              <div className="rounded-xl border border-[#E8DFC2] bg-[#FAF5EF] px-3 py-2 text-[11px] text-[#5F5148] flex items-center justify-between gap-3">
+                <div>
+                  <p className="font-bold text-[#2F2B28]">Compte de démonstration</p>
+                  <p className="text-[#6A6055]">{demoAccountMap[actor].id} / {demoAccountMap[actor].password}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={fillDemoCredentials}
+                  className="px-2.5 py-1.5 rounded-lg bg-white border border-[#E8DFC2] text-[#9C4323] font-bold text-[10px] hover:bg-[#F3ECE5] transition-colors cursor-pointer"
+                >
+                  Remplir
+                </button>
+              </div>
               
               {errorMsg && (
                 <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-xs font-bold text-center">

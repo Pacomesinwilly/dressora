@@ -6,6 +6,11 @@ import GuestLayout from './layouts/GuestLayout';
 import LoginScreen from './views/auth/LoginScreen';
 import { PropertyListing, Lead } from './domain/entities/types';
 import { INITIAL_LISTINGS, INITIAL_LEADS } from './infrastructure/mock/mockData';
+import { ensureDemoUsers } from './lib/auth';
+
+if (typeof window !== 'undefined') {
+  ensureDemoUsers();
+}
 
 export default function App() {
   const [selectedActor, setSelectedActor] = useState<'agent' | 'client' | 'guest' | null>(null);

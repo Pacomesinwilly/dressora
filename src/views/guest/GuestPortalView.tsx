@@ -40,7 +40,8 @@ export default function GuestPortalView() {
   const [copiedText, setCopiedText] = useState<string | null>(null);
   
   // Custom navigation menu for all sub mockups under Guest role
-  const [guestSubTab, setGuestSubTab] = useState<'search' | 'detail' | 'checkout' | 'sent' | 'dashboard' | 'credit' | 'identity' | 'lease' | 'payments' | 'stay' | 'notifications' | 'virtual-visit' | 'waiting' | 'vault'>('identity');
+  // Dashboard is the default entry point so the resident portal opens on the real dashboard
+  const [guestSubTab, setGuestSubTab] = useState<'search' | 'detail' | 'checkout' | 'sent' | 'dashboard' | 'credit' | 'identity' | 'lease' | 'payments' | 'stay' | 'notifications' | 'virtual-visit' | 'waiting' | 'vault'>('dashboard');
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
 
   // Interactive configurations for subtabs
