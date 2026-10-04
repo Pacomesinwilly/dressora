@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Landing from './pages/Landing';
 import AgentLayout from './layouts/AgentLayout';
 import ClientLayout from './layouts/ClientLayout';
@@ -7,6 +7,7 @@ import LoginScreen from './views/auth/LoginScreen';
 import { PropertyListing, Lead } from './domain/entities/types';
 import { INITIAL_LISTINGS, INITIAL_LEADS } from './infrastructure/mock/mockData';
 import { ensureDemoUsers } from './lib/auth';
+import { fetchPublicProperties } from './lib/api';
 
 if (typeof window !== 'undefined') {
   ensureDemoUsers();
@@ -17,6 +18,23 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [listings, setListings] = useState<PropertyListing[]>(INITIAL_LISTINGS);
   const [leads, setLeads] = useState<Lead[]>(INITIAL_LEADS);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadRemoteListings = async () => {
+      const remoteListings = await fetchPublicProperties();
+      if (!cancelled && remoteListings && remoteListings.length > 0) {
+        setListings(remoteListings);
+      }
+    };
+
+    void loadRemoteListings();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleAddProperty = (newProp: PropertyListing) => setListings(prev => [newProp, ...prev]);
   const handleDeleteListing = (id: string) => setListings(prev => prev.filter(p => p.id !== id));

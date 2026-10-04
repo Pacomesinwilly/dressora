@@ -7,10 +7,10 @@
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",
-    "clean": "rm -rf dist server.js",
+    "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "server": "node server/index.js",
-    "start": "node server.js",
+    "start": "node server/index.js",
     "start:prod": "serve -s dist -l $PORT"
   },
   "dependencies": {
