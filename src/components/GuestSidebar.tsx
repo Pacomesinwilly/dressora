@@ -1,10 +1,13 @@
-import { Building2, HelpCircle, LogOut } from 'lucide-react';
+import { BadgeCheck, Bell, Building2, CreditCard, FileText, Gauge, HelpCircle, KeyRound, LogOut, Search, Wifi } from 'lucide-react';
+import type { GuestPortalTab } from '../views/guest/GuestPortalView';
 
 interface GuestSidebarProps {
+  activeTab: GuestPortalTab;
+  onNavigate: (tab: GuestPortalTab) => void;
   onLogout: () => void;
 }
 
-export default function GuestSidebar({ onLogout }: GuestSidebarProps) {
+export default function GuestSidebar({ activeTab, onNavigate, onLogout }: GuestSidebarProps) {
   return (
     <aside className="w-full md:w-72 bg-[#F3ECE5] border-b md:border-b-0 md:border-r border-[#E8DFC2]/40 flex flex-col justify-between h-auto md:h-screen static md:sticky top-0 font-sans select-none z-30 shrink-0">
       <div className="flex flex-col p-6 overflow-y-auto flex-1">
@@ -22,20 +25,29 @@ export default function GuestSidebar({ onLogout }: GuestSidebarProps) {
           </div>
         </div>
 
-        <div className="space-y-3.5 bg-white/40 p-4 rounded-2xl border border-[#E8DFC2]/30">
-          <p className="text-[10px] uppercase tracking-wider font-mono text-[#9C4323] font-bold">
-            Services Locataire
-          </p>
-          <p className="text-xs text-stone-600 leading-relaxed">
-            Votre espace Dodo/Dressrosa vous permet de :
-          </p>
-          <ul className="text-[11px] text-[#9C4323] space-y-1.5 list-disc pl-4 font-bold">
-            <li>Rechercher un logement d'élite</li>
-            <li>Construire votre Trust Score</li>
-            <li>Demander un crédit locatif</li>
-            <li>Signer votre bail & payer</li>
-          </ul>
-        </div>
+        <nav aria-label="Navigation résident" className="space-y-1">
+          {[
+            { id: 'stay' as const, label: 'Mon Séjour', icon: Wifi },
+            { id: 'search' as const, label: 'Explorer', icon: Search },
+            { id: 'dashboard' as const, label: 'Trust Score', icon: Gauge },
+            { id: 'identity' as const, label: 'Identité', icon: BadgeCheck },
+            { id: 'lease' as const, label: 'Bail & Signature', icon: FileText },
+            { id: 'payments' as const, label: 'Paiements', icon: CreditCard },
+            { id: 'notifications' as const, label: 'Notifications', icon: Bell },
+            { id: 'vault' as const, label: 'Coffre-fort', icon: KeyRound },
+          ].map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              type="button"
+              aria-current={activeTab === id ? 'page' : undefined}
+              onClick={() => onNavigate(id)}
+              className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-colors ${activeTab === id ? 'bg-[#9C4323] text-white' : 'text-[#6A6055] hover:bg-white/70 hover:text-[#2F2B28]'}`}
+            >
+              <Icon className="w-4 h-4" />
+              {label}
+            </button>
+          ))}
+        </nav>
       </div>
 
       <div className="p-6 border-t border-[#E8DFC2]/30 space-y-4">

@@ -36,13 +36,27 @@ import {
 import GuestBailView from './GuestBailView';
 import GuestNotificationsView from './GuestNotificationsView';
 
-export default function GuestPortalView() {
+export type GuestPortalTab = 'search' | 'detail' | 'checkout' | 'sent' | 'dashboard' | 'credit' | 'identity' | 'lease' | 'payments' | 'stay' | 'notifications' | 'virtual-visit' | 'waiting' | 'vault';
+
+interface GuestPortalViewProps {
+  initialTab?: GuestPortalTab;
+  onActiveTabChange?: (tab: GuestPortalTab) => void;
+}
+
+export default function GuestPortalView({ initialTab = 'stay', onActiveTabChange }: GuestPortalViewProps) {
   const [copiedText, setCopiedText] = useState<string | null>(null);
   
   // Custom navigation menu for all sub mockups under Guest role
-  // Dashboard is the default entry point so the resident portal opens on the real dashboard
-  const [guestSubTab, setGuestSubTab] = useState<'search' | 'detail' | 'checkout' | 'sent' | 'dashboard' | 'credit' | 'identity' | 'lease' | 'payments' | 'stay' | 'notifications' | 'virtual-visit' | 'waiting' | 'vault'>('dashboard');
+  const [guestSubTab, setGuestSubTab] = useState<GuestPortalTab>(initialTab);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    setGuestSubTab(initialTab);
+  }, [initialTab]);
+
+  React.useEffect(() => {
+    onActiveTabChange?.(guestSubTab);
+  }, [guestSubTab, onActiveTabChange]);
 
   // Interactive configurations for subtabs
   // Tab 2: Identity verified trigger

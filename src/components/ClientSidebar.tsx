@@ -1,10 +1,14 @@
-import { Building2, HelpCircle, LogOut } from 'lucide-react';
+import { Building2, CreditCard, FileText, HelpCircle, LayoutDashboard, LogOut, Users } from 'lucide-react';
+
+type ClientTab = 'dashboard' | 'properties' | 'finances' | 'documents' | 'tenants';
 
 interface ClientSidebarProps {
+  activeTab: ClientTab;
+  onNavigate: (tab: ClientTab) => void;
   onLogout: () => void;
 }
 
-export default function ClientSidebar({ onLogout }: ClientSidebarProps) {
+export default function ClientSidebar({ activeTab, onNavigate, onLogout }: ClientSidebarProps) {
   return (
     <aside className="w-full md:w-72 bg-[#F3ECE5] border-b md:border-b-0 md:border-r border-[#E8DFC2]/40 flex flex-col justify-between h-auto md:h-screen static md:sticky top-0 font-sans select-none z-30 shrink-0">
       <div className="flex flex-col p-6 overflow-y-auto flex-1">
@@ -22,21 +26,26 @@ export default function ClientSidebar({ onLogout }: ClientSidebarProps) {
           </div>
         </div>
 
-        <div className="space-y-3.5 bg-white/40 p-4 rounded-2xl border border-[#E8DFC2]/30">
-          <p className="text-[10px] uppercase tracking-wider font-mono text-[#9C4323] font-bold">
-            Navigation Interne
-          </p>
-          <p className="text-xs text-stone-600 leading-relaxed">
-            Utilisez le menu horizontal haut pour naviguer entre :
-          </p>
-          <ul className="text-[11px] text-stone-700 space-y-1.5 list-disc pl-4 font-medium">
-            <li>Tableau de bord</li>
-            <li>Gestion Immobilière (Propriétés)</li>
-            <li>Finances & Retraits</li>
-            <li>Gestion Locataires</li>
-            <li>Coffre-fort Documents</li>
-          </ul>
-        </div>
+        <nav aria-label="Navigation propriétaire" className="space-y-1">
+          {[
+            { id: 'dashboard' as const, label: 'Tableau de bord', icon: LayoutDashboard },
+            { id: 'properties' as const, label: 'Mes biens', icon: Building2 },
+            { id: 'finances' as const, label: 'Finances', icon: CreditCard },
+            { id: 'tenants' as const, label: 'Locataires', icon: Users },
+            { id: 'documents' as const, label: 'Documents', icon: FileText },
+          ].map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              type="button"
+              aria-current={activeTab === id ? 'page' : undefined}
+              onClick={() => onNavigate(id)}
+              className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-colors ${activeTab === id ? 'bg-[#9C4323] text-white' : 'text-[#6A6055] hover:bg-white/70 hover:text-[#2F2B28]'}`}
+            >
+              <Icon className="w-4 h-4" />
+              {label}
+            </button>
+          ))}
+        </nav>
       </div>
 
       <div className="p-6 border-t border-[#E8DFC2]/30 space-y-4">

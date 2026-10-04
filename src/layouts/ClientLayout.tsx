@@ -4,6 +4,7 @@ import ClientSidebar from '../components/ClientSidebar';
 import LHabitationView from '../views/client/LHabitationView';
 import LuxEstateView from '../views/guest/LuxEstateView';
 import { PropertyListing } from '../domain/entities/types';
+import type { ClientTab } from '../views/client/LHabitationView';
 
 interface ClientLayoutProps {
   onLogout: () => void;
@@ -12,10 +13,16 @@ interface ClientLayoutProps {
 
 export default function ClientLayout({ onLogout, onAddPropertyExternal }: ClientLayoutProps) {
   const [subMode, setSubMode] = useState<'lhabitation' | 'luxestate'>('lhabitation');
+  const [activeTab, setActiveTab] = useState<ClientTab>('dashboard');
+
+  const navigateToTab = (tab: ClientTab) => {
+    setActiveTab(tab);
+    setSubMode('lhabitation');
+  };
 
   return (
     <div className="min-h-screen md:h-screen bg-[#FDFBF7] text-[#2F2B28] flex flex-col md:flex-row overflow-x-hidden md:overflow-hidden font-sans">
-      <ClientSidebar onLogout={onLogout} />
+      <ClientSidebar activeTab={activeTab} onNavigate={navigateToTab} onLogout={onLogout} />
       
       <main className="flex-1 min-h-screen md:h-screen overflow-y-visible md:overflow-y-auto w-full">
         <div className="p-6 md:p-12 max-w-7xl mx-auto space-y-8">
@@ -49,7 +56,11 @@ export default function ClientLayout({ onLogout, onAddPropertyExternal }: Client
           <AnimatePresence mode="wait">
             <motion.div key={`tab-client-${subMode}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
               {subMode === 'lhabitation' ? (
-                <LHabitationView onAddPropertyExternal={onAddPropertyExternal} />
+                <LHabitationView
+                  onAddPropertyExternal={onAddPropertyExternal}
+                  initialTab={activeTab}
+                  onActiveTabChange={setActiveTab}
+                />
               ) : (
                 <LuxEstateView />
               )}

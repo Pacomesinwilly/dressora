@@ -52,11 +52,15 @@ import {
   SecurityOTPScreen
 } from './LHabitationSubViews';
 
+export type ClientTab = 'dashboard' | 'properties' | 'finances' | 'documents' | 'tenants';
+
 interface LHabitationViewProps {
   onAddPropertyExternal?: (prop: any) => void;
+  initialTab?: ClientTab;
+  onActiveTabChange?: (tab: ClientTab) => void;
 }
 
-export default function LHabitationView({ onAddPropertyExternal }: LHabitationViewProps) {
+export default function LHabitationView({ onAddPropertyExternal, initialTab = 'dashboard', onActiveTabChange }: LHabitationViewProps) {
   // Navigation for L'Habitation: 'dashboard' | 'properties' | 'finances' | 'documents' | 'tenants' | 'add_property' | 'success'
   const [activeTab, setActiveTab] = useState<
     'dashboard' | 'properties' | 'finances' | 'documents' | 'tenants' | 'add_property' | 'success' | 
@@ -64,7 +68,15 @@ export default function LHabitationView({ onAddPropertyExternal }: LHabitationVi
     'demo_chat' | 'demo_notif' | 'demo_profile' | 'demo_empty' | 'demo_pay_fail' | 'demo_credit' |
     'demo_trust_score' | 'demo_bail_sig' | 'demo_res_sent' | 'demo_prop_prestige' | 'demo_catalogue' |
     'demo_kyc' | 'demo_login' | 'demo_otp'
-  >('dashboard');
+  >(initialTab);
+
+  React.useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
+
+  React.useEffect(() => {
+    onActiveTabChange?.(activeTab as ClientTab);
+  }, [activeTab, onActiveTabChange]);
 
   // Interactive properties list
   const [properties, setProperties] = useState([
